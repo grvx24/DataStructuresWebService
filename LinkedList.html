@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="LinkedList.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+
+</head>
+<body>
+
+
+<script>
+
+
+    var data=[1,2,3,4,5,6,7,8,9,10];
+
+    var width = 2000;
+    var height = 2000;
+
+    var svg=d3.select("body")
+        .append("svg")
+        .attr("class","SvgContainer")
+        .attr("width",width)
+        .attr("height",height)
+        .append("g")
+        .attr("transform","translate(50,0)");
+
+    var dataRectangles = svg.selectAll("g")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("class","DataRect")
+        .attr("x",function (d,i) {
+            return i *100;
+        })
+        .attr("y",50)
+        .attr("width",50)
+        .attr("height",50)
+
+    var dataRectangles = svg.selectAll("g")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("class","PointerRect")
+        .attr("x",function (d,i) {
+            return i *100+50;
+        })
+        .attr("y",50)
+        .attr("width",25)
+        .attr("height",50)
+
+
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+.DataRect
+{
+    fill:red;
+    stroke-width: 3px;
+    stroke:black;
+}
+.PointerRect
+{
+    fill:gray;
+    stroke-width: 3px;
+    stroke:black;
+}
+
+.SvgContainer
+{
+    background-color: aliceblue;
+}
+
+text
+{
+    text-anchor: middle;
+
+}
