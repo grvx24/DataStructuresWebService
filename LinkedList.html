@@ -2,19 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Linked list</title>
+
     <link rel="stylesheet" type="text/css" href="LinkedList.css">
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
-
 </head>
 <body>
+<div class="row">
+    <div class="column">
+        <textarea class="JsonInput" rows="25" cols="50">
+        {
+        "type":"linked_list",
+        "subtype":"single",
+        "data":[
+            {"value":33},
+            {"value":234},
+        ]};
+
+        </textarea>
+        <input class="VisualizeButton" align="center" type="button" value="Visualize"/>
+    </div>
+    <div class="column">
+        <div id = "svgContainer"></div>
+    </div>
+</div>
+
+
+
 
 
 <script>
+    
+    var jsonData = {
+        "type":"linked_list",
+        "subtype":"single",
+        "data":[
+            {"value":33},
+            {"value":234},
+        ]
+    };
 
 
-    var data=[1,2,3,4,5,6,7,8,9,10];
+
+    var g={"value":123};
+
+
+    jsonData.data.push(g);
+
+    var data=jsonData.data;
 
     var width = 500;
     var height = 2000;
@@ -28,20 +64,83 @@
     var offset = (dataRectHeight + pointerRectHeight+50);
     var lineOffset = dataRectHeight + pointerRectHeight;
 
-    var svgContainer=d3.select("body")
+    var svgContainer=d3.select("#svgContainer")
         .append("svg")
         .attr("class","SvgContainer")
         .attr("width",width)
         .attr("height",height)
-        .attr("transform", "translate(60, 60)");
+        .attr("transform",
+            "translate(100, 0)");
 
+
+    var HeadGroup = d3.selectAll(".SvgContainer")
+        .append("g")
+        .attr("id","HeadGroup")
+        .attr("transform", "translate(50 , 50)");
+
+    var HeadX = 100
+
+
+    HeadGroup
+        .append("rect")
+        .attr("class","HeadRect")
+        .attr("y",0)
+        .attr("x",HeadX)
+        .attr("width",dataRectWidth)
+        .attr("height",dataRectHeight)
+        .attr("fill","green");
+
+    HeadGroup
+        .append("text")
+        .text("Head")
+        .style("font-size", "30px")
+        .style('fill', 'black')
+        .style("font-weight","bold")
+        .attr("x",(HeadX*2)-50)
+        .attr("y",50);
+
+    HeadGroup
+        .append("line")
+        .attr("x1",HeadX*2-50)
+        .attr("y1",100)
+        .attr("x2",HeadX*2-50)
+        .attr("y2",150)
+        .attr("stroke-width", 5)
+        .attr("stroke", "black");
+
+    var lastItemIndex = data.length;
+
+
+    var NullGroup = d3.selectAll(".SvgContainer")
+        .append("g")
+        .attr("id","TailGroup")
+        .attr("transform", "translate(50,"+(lastItemIndex*200+200)+")");
+
+    NullGroup
+        .append("rect")
+        .attr("class","NullRect")
+        .attr("y",0)
+        .attr("x",HeadX)
+        .attr("width",dataRectWidth)
+        .attr("height",dataRectHeight)
+        .attr("fill","green");
+
+    NullGroup
+        .append("text")
+        .text("NULL")
+        .style("font-size", "30px")
+        .style('fill', 'black')
+        .style("font-weight","bold")
+        .attr("x",(HeadX*2)-50)
+        .attr("y",50);
 
 
     var dataRectangles = svgContainer.selectAll(".SvgContainer")
         .data(data)
         .enter()
         .append("g")
-        .attr("transform", "translate(100, 50)")
+        .attr("class","DataGroup")
+        .attr("transform", "translate(100, 200)")
         .append("rect")
         .attr("class","DataRect")
         .attr("y",function (d,i) {
@@ -49,30 +148,10 @@
         })
         .attr("x",50)
         .attr("width",dataRectWidth)
-        .attr("height",dataRectHeight)
-
-    var head = d3.selectAll("g")
-        .filter(function(d, i) { return i == 0 })
-        .append("text")
-        .text("HEAD")
-        .style("font-size", "34px")
-        .style('fill', 'green')
-        .style("font-weight","bold")
-        .attr("x",-20)
-        .attr("y",dataRectHeight);
-
-    var tail = d3.selectAll("g")
-        .filter(function(d, i) { return i == data.length-1 })
-        .append("text")
-        .text("TAIL")
-        .style("font-size", "34px")
-        .style('fill', 'green')
-        .style("font-weight","bold")
-        .attr("x",-20)
-        .attr("y",function (d,i){return (data.length-1) *offset+dataRectHeight});
+        .attr("height",dataRectHeight);
 
 
-    var pointerRectangles = svgContainer.selectAll("g")
+    var pointerRectangles = svgContainer.selectAll(".DataGroup")
         .append("rect")
         .attr("class","PointerRect")
         .attr("y",function (d,i) {
@@ -83,33 +162,27 @@
         .attr("height",pointerRectHeight);
 
 
-    var dataText = svgContainer.selectAll("g")
+    var dataText = svgContainer.selectAll(".DataGroup")
         .append("text")
+        .attr("class","StructureText")
         .text(function (d,i) {
-            return "Data: "+d;
+            return "Data: "+d.value;
         })
         .attr("y",function (d,i) {
             return i *offset + dataRectHeight/2;
         })
         .attr("x",offset/2);
 
-    var indexText = svgContainer.selectAll("g")
+    var indexText = svgContainer.selectAll(".DataGroup")
         .append("text")
-        .text(function (d,i) {
-            if(i == data.length-1)
-            {
-                return "Null"
-            }else
-            {
-                return "Next";
-            }
-        })
+        .attr("class","StructureText")
+        .text("Next")
         .attr("y",function (d,i) {
             return i *offset + dataRectHeight/2+pointerRectHeight*1.5;
         })
         .attr("x",offset/2);
 
-    var lines = svgContainer.selectAll("g")
+    var lines = svgContainer.selectAll(".DataGroup")
         .append("line")
         .attr("x1",100)
         .attr("y1",function (d,i) {
@@ -121,8 +194,6 @@
         })
         .attr("stroke-width", 5)
         .attr("stroke", "black");
-
-
 
 
 

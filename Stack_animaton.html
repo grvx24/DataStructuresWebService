@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="Stack_animation.css">
+    <title>Title</title>
+</head>
+<body>
+
+
+
+<div  id="PushContainer">
+    <input class="Buttons" type="submit" value="Push" onclick="Push()">
+</div>
+
+<div id="PopContainer">
+    <input class="Buttons" type="submit" value="Pop" onclick="Pop()">
+</div>
+
+<div id="error">
+    Stack simulation
+</div>
+
+</body>
+
+
+<script>
+
+    var data = [];
+    var maxLength =14;
+    var width = 1500;
+    var height = 1200;
+    var padding = 20
+
+
+
+    var svgContainer = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    var rectanglesGroup = svgContainer.append("g")
+        .attr("transform","translate(50,100)");
+
+    color = d3.scaleLinear()
+        .domain([0,100])
+        .interpolate(d3.interpolateHcl)
+        .range([d3.rgb("#0000FF"), d3.rgb('#FFFF00')]);
+
+    var rect_height = 100;
+    var rect_width = 100;
+
+    function Pop() {
+
+        document.getElementById("error").innerText="Stack simulation";
+
+        if(data.length==0)
+            return;
+        data.pop();
+        Remove();
+    }
+
+    function Push() {
+        if(data.length>=maxLength)
+        {
+            document.getElementById("error").innerText="STACK OVERFLOW!";
+            return;
+        }else
+        {
+
+            var toAdd =Math.floor(Math.random()*100+1);
+            data.push(toAdd);
+            Visualize(data)
+        }
+
+
+    }
+
+    function Remove() {
+        var rects =svgContainer.select("g").selectAll("rect")
+            .data(data);
+        rects.exit().remove();
+
+        var texts = svgContainer.select("g").selectAll("text");
+        texts
+            .data(data)
+            .exit()
+            .remove();
+
+
+    }
+
+
+    function Visualize() {
+
+        var rectangles = rectanglesGroup.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect");
+
+        var rectanglesAttributes = rectangles.
+        transition()
+            .duration(500)
+            .attr("x", function (d,i) {
+                return i*rect_width; })
+            .attr("y",50)
+            .attr("width", function () { return rect_width - padding; })
+            .attr("height",function (){return rect_height - padding})
+            .attr("id",function (d,i) {
+                console.log("rect"+i)
+                return "rect"+i;
+            })
+            .style("fill",function(d){return color(d);});
+
+        var text = rectanglesGroup.selectAll("text")
+            .data(data)
+            .enter()
+            .append("text");
+
+        var textAttr = text
+            .transition()
+            .duration(500)
+            .text(function (d) {
+                return d;
+            })
+            .attr("x",function (d,i) {
+                return i*rect_width+10; })
+            .attr("y",100)
+            .attr("fill","Black")
+            .attr("font-size","30px");
+
+
+
+    }
+
+</script>
+
+
+
+</html>

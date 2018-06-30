@@ -1,46 +1,14 @@
-.DataRect
+.GraphCircle
 {
     fill:yellow;
     stroke-width: 3px;
     stroke:black;
-}
-.PointerRect
-{
-    fill:orange;
-    stroke-width: 3px;
-    stroke:black;
-}
 
+}
 .SvgContainer
 {
     background-color: aliceblue;
 }
-
-.HeadRect
-{
-    fill:limegreen;
-    stroke-width: 3px;
-    stroke:black;
-}
-
-.NullRect
-{
-    fill:red;
-    stroke-width: 3px;
-    stroke:black;
-}
-
-.StructureText
-{
-    text-anchor: middle;
-    font-weight: bold;
-}
-
-text
-{
-    text-anchor: middle;
-}
-
 .column {
     float: left;
     width: 300px;
@@ -51,6 +19,11 @@ text
     content: "";
     display: table;
     clear: both;
+}
+@media screen and (max-width: 600px) {
+    .column {
+        width: 100%;
+    }
 }
 
 .VisualizeButton
