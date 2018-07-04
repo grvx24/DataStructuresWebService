@@ -1,3 +1,5 @@
+
+
 .DataRect
 {
     fill:yellow;
@@ -35,8 +37,13 @@
     text-anchor: middle;
     font-weight: bold;
 }
+.PointerText
+{
+    text-anchor: middle;
+    font-weight: bold;
+}
 
-text
+.SvgText
 {
     text-anchor: middle;
 }
