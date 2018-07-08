@@ -6,7 +6,13 @@
 
     <link rel="stylesheet" type="text/css" href="LinkedList.css">
     <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="LinkedList.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/rgbcolor.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/StackBlur.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script>
+
 
 </head>
 <body onload="Init()">
@@ -14,12 +20,76 @@
     <div class="column">
         <textarea id="JsonInput" rows="25" cols="50" wrap="physical"></textarea>
         <input class="VisualizeButton" align="center" type="button" value="Run example" onclick="RunExample()"/>
-        <input class="VisualizeButton" align="center" type="button" value="Visualize" onclick="StartVisualization()"/>
+        <input class="VisualizeButton" align="center" type="button" value="Visualize" onclick="Visualize()"/>
+        <input  class="VisualizeButton" align="center" type="button" value="IMG" onclick="DownloadPNG()"/>
     </div>
     <div class="column">
-        <div id = "svgContainer"></div>
+        <div id = "svgDiv">
+            <svg id="SvgContainer" xmlns="http://www.w3.org/2000/svg" >
+                <style type="text/css">
+                    .DataRect
+                    {
+                        fill:yellow;
+                        stroke-width: 3px;
+                        stroke:black;
+                    }
+                    .PointerRect
+                    {
+                        fill:orange;
+                        stroke-width: 3px;
+                        stroke:black;
+                    }
+
+                    .SvgContainer
+                    {
+                        background-color: aliceblue;
+                    }
+
+                    .HeadRect
+                    {
+                        fill:limegreen;
+                        stroke-width: 3px;
+                        stroke:black;
+                    }
+
+                    .NullRect
+                    {
+                        fill:red;
+                        stroke-width: 3px;
+                        stroke:black;
+                    }
+
+                    .StructureText
+                    {
+                        text-anchor: middle;
+                        font-weight: bold;
+                    }
+                    .PointerText
+                    {
+                        text-anchor: middle;
+                        font-weight: bold;
+                    }
+
+                    .SvgText
+                    {
+                        text-anchor: middle;
+                    }
+
+                </style>
+            </svg>
+        </div>
     </div>
 </div>
 
+<canvas id="canvasId"></canvas>
+
+<script src="LinkedList.js"></script>
+<script src="SaveToFile.js"></script>
+
+
 </body>
+
+
+
+
 </html>

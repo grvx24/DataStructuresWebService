@@ -1,56 +1,9 @@
 
-
-.DataRect
-{
-    fill:yellow;
-    stroke-width: 3px;
-    stroke:black;
-}
-.PointerRect
-{
-    fill:orange;
-    stroke-width: 3px;
-    stroke:black;
-}
-
-.SvgContainer
-{
-    background-color: aliceblue;
-}
-
-.HeadRect
-{
-    fill:limegreen;
-    stroke-width: 3px;
-    stroke:black;
-}
-
-.NullRect
-{
-    fill:red;
-    stroke-width: 3px;
-    stroke:black;
-}
-
-.StructureText
-{
-    text-anchor: middle;
-    font-weight: bold;
-}
-.PointerText
-{
-    text-anchor: middle;
-    font-weight: bold;
-}
-
-.SvgText
-{
-    text-anchor: middle;
-}
-
 .column {
     float: left;
     width: 300px;
+    min-width: 300px;
+    min-height: 600px;
 }
 
 /* Clear floats after the columns */
@@ -62,6 +15,8 @@
 
 .VisualizeButton
 {
+    margin-left: 10px;
+    min-width: 350px;
     background-color: darkgreen; /* Green */
     border: none;
     color: white;
@@ -70,6 +25,7 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    margin-bottom: 5px;
 }
 
 .VisualizeButton:hover
