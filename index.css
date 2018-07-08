@@ -31,12 +31,6 @@ footer {
     color: white;
     height: 100px;
 }
-
-@media only screen and (max-width: 600px) {
-    .right { float: none; }
-    .left { float: none; }
-}
-
 .right{
     float: right;
 }
@@ -44,6 +38,22 @@ footer {
 .left{
     float: left;
 }
+
+@media only screen and (max-width: 550px) {
+    .left {
+        float: none;
+        display: inline-block;
+
+    }
+
+    .right {
+        float: none;
+        display: inline-block;
+    }
+}
+
+
+
 
 .mainDiv {
     min-height: 98%;
