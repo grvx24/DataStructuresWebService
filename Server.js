@@ -43,6 +43,9 @@ var server = http.createServer(function (req, res) {
         case '/tree':
             filename = "Tree.html";
             break;
+        case '/canvas.png':
+            filename = "canvas.png";
+            break;
 
         default:
             res.end('404 Invalid Request!');
@@ -52,10 +55,14 @@ var server = http.createServer(function (req, res) {
 
     if (filename) {
        var isHtml =  filename.search("html");
+       var isPng =  filename.search("png");
 
        if(isHtml>0){
            res.writeHead(200, {"Content-Type": "text/html"});
-       }else{
+       }else if(isPng>0){
+           res.writeHead(200, {"Content-Type": "image/png"});
+       }
+       else{
            res.writeHead(200, {"Content-Type": "text/css"});
        }
 
