@@ -24,12 +24,12 @@
         }
 
         .links line {
-            stroke: #999;
+            stroke: black;
             stroke-opacity: 0.6;
         }
 
-        .nodes circle {
-            fill: white;
+        .nodes circle  {
+            fill: green;
             stroke-width: 1.5px;
             stroke:black;
         }
@@ -94,7 +94,7 @@
                 .selectAll("circle")
                 .data(graph.nodes)
                 .enter().append("circle")
-                .attr("r", 5)
+                .attr("r", 10)
                 .attr("fill", function(d) { return color(d.group); })
                 .call(d3.drag()
                     .on("start", dragstarted)
@@ -103,6 +103,7 @@
 
             node.append("title")
                 .text(function(d) { return d.id; });
+
 
             simulation
                 .nodes(graph.nodes)
