@@ -5,6 +5,7 @@
     <title>Linked list</title>
 
     <link rel="stylesheet" type="text/css" href="LinkedList.css">
+    <link rel="stylesheet" type="text/css" href="Buttons.css">
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
@@ -18,10 +19,11 @@
 <body onload="Init()">
 <div class="row">
     <div class="column">
+        <label style="text-align: center">JSON input</label>
         <textarea id="JsonInput" rows="25" cols="50" wrap="physical"></textarea>
         <input class="VisualizeButton" align="center" type="button" value="Run example" onclick="RunExample()"/>
         <input class="VisualizeButton" align="center" type="button" value="Visualize" onclick="Visualize()"/>
-        <input  class="VisualizeButton" align="center" type="button" value="IMG" onclick="DownloadPNG()"/>
+        <input  class="VisualizeButton" align="center" type="button" value="Save to png" onclick="DownloadPNG()"/>
     </div>
     <div class="column">
         <div id = "svgDiv">
@@ -82,6 +84,7 @@
 </div>
 
 <canvas id="canvasId"></canvas>
+<a id="DownloadLink"></a>
 
 <script src="LinkedList.js"></script>
 <script src="SaveToFile.js"></script>

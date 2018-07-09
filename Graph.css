@@ -1,17 +1,10 @@
-.GraphCircle
-{
-    fill:yellow;
-    stroke-width: 3px;
-    stroke:black;
-
-}
 .SvgContainer
 {
     background-color: aliceblue;
 }
 .column {
     float: left;
-    width: 300px;
+    width: 500px;
 }
 
 /* Clear floats after the columns */
@@ -26,19 +19,3 @@
     }
 }
 
-.VisualizeButton
-{
-    background-color: darkgreen; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-}
-
-.VisualizeButton:hover
-{
-    background-color: greenyellow; /* Green */
-}

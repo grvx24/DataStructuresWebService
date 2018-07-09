@@ -13,22 +13,3 @@
     clear: both;
 }
 
-.VisualizeButton
-{
-    margin-left: 10px;
-    min-width: 350px;
-    background-color: darkgreen; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-.VisualizeButton:hover
-{
-    background-color: greenyellow; /* Green */
-}

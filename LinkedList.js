@@ -62,7 +62,7 @@ function Init() {
         .attr("x2",LineX+50)
         .attr("y2",LineY)
         .attr("stroke-width", lineThickness)
-        .attr("stroke", "purple");
+        .attr("stroke", "red");
 
 
 
@@ -295,7 +295,7 @@ function Visualize(jsonData) {
             return i*150+lineOffset+50;
         })
         .attr("stroke-width", lineThickness)
-        .attr("stroke", "purple");
+        .attr("stroke", "red");
 
     var lastItemIndex = data.length;
 
