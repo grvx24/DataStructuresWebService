@@ -1,236 +1,77 @@
 <!DOCTYPE html>
+<html lang="en">
 <meta charset="utf-8">
 <style>
 
-    .node {
-        cursor: pointer;
+
+    .column {
+        float: left;
+        width: 400px;
+        min-height: 600px;
     }
 
-    .node circle {
-        fill: darkgreen;
-        stroke: yellow;
-        stroke-width: 3px;
-    }
-
-    .node text {
-        font: 20px sans-serif;
-        font-weight: bold;
-    }
-
-    .link {
-        fill: none;
-        stroke: #ccc;
-        stroke-width: 1.5px;
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
     }
 
 </style>
 <head>
-    <link rel="stylesheet" type="text/css" href="LinkedList.css">
+    <link rel="stylesheet" type="text/css" href="Buttons.css">
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/rgbcolor.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/StackBlur.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script>
 
 </head>
 <body>
 
 <div class="row">
     <div class="column">
-        <textarea class="JsonInput" rows="25" cols="50"></textarea>
-        <input class="VisualizeButton" align="center" type="button" value="Visualize"/>
+        <label>JSON input</label>
+        <textarea id="JsonInput" rows="25" cols="50"></textarea>
+        <input class="VisualizeButton" align="center" type="button" value="Run example" onclick="RunExample()"/>
+        <input class="VisualizeButton" align="center" type="button" value="Visualize" onclick="StartVisualization()"/>
+        <input class="VisualizeButton" align="center" type="button" value="Save to png" onclick="DownloadPNG()"/>
     </div>
     <div class="column">
-        <div id = "svgContainer"></div>
+        <div id = "svgDiv">
+        <svg id="SvgContainer" xmlns="http://www.w3.org/2000/svg" >
+            <style>
+                .node {
+                    cursor: pointer;
+                }
+
+                .node circle {
+                    fill: darkgreen;
+                    stroke: yellow;
+                    stroke-width: 3px;
+                }
+
+                .node text {
+                    font: 20px sans-serif;
+                    font-weight: bold;
+                }
+
+                .link {
+                    fill: none;
+                    stroke: #ccc;
+                    stroke-width: 1.5px;
+                }
+            </style>
+        </svg>
+        </div>
     </div>
 </div>
 
-<script src="//d3js.org/d3.v3.min.js"></script>
-<script>
 
-    var margin = {top: 20, right: 120, bottom: 20, left: 120},
-        width = 960 - margin.right - margin.left,
-        height = 800 - margin.top - margin.bottom;
+<canvas id="canvasId"></canvas>
+<a id="DownloadLink"></a>
 
-    var i = 0,
-        duration = 750,
-        root;
+<script src="Tree.js"></script>
+<script src="SaveToFile.js"></script>
 
-    var tree = d3.layout.tree()
-        .size([height, width]);
-
-    var diagonal = d3.svg.diagonal()
-        .projection(function(d) { return [d.x, d.y]; });
-
-    var svg = d3.select("#svgContainer").append("svg")
-        .attr("width", width + margin.right + margin.left)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(100,100)");
-
-    var jsonData= {
-            "type":"tree",
-            "subtype":"simple_v2",
-            "data":{
-                "node_data":"Value1",
-                "children":[
-                    {
-                        "node_data":"Value34",
-                        "children":[
-                            {
-                                "node_data":"Value111",
-                                "children": [
-                                    {
-                                        "node_data":"Value67",
-                                        "children":[]
-                                    },
-                                    {
-                                        "node_data":"Value674",
-                                        "children":[]
-                                    },
-                                ]
-                            },                            {
-                                "node_data":"Value111",
-                                "children": [
-                                    {
-                                        "node_data":"Value67",
-                                        "children":[]
-                                    },
-                                    {
-                                        "node_data":"Value674",
-                                        "children":[]
-                                    },
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "node_data":"Value303",
-                        "children":[
-                            {
-                                "node_data":"Value456",
-                                "children": []
-                            },
-                            {
-                                "node_data":"Value150",
-                                "children": []
-                            }
-                        ]
-                    }
-                ]
-            }
-        };
-        var root = jsonData.data;
-        root.x0 = height / 2;
-        root.y0 = 0;
-
-        function collapse(d) {
-            if (d.children) {
-                d._children = d.children;
-                d._children.forEach(collapse);
-                d.children = null;
-            }
-        }
-
-        root.children.forEach(collapse);
-        update(root);
-
-
-    d3.select(self.frameElement).style("height", "800px");
-
-    function update(source) {
-
-        // Compute the new tree layout.
-        var nodes = tree.nodes(root).reverse(),
-            links = tree.links(nodes);
-
-        // Normalize for fixed-depth.
-        nodes.forEach(function(d) { d.y = d.depth * 100; });
-
-        // Update the nodes…
-        var node = svg.selectAll("g.node")
-            .data(nodes, function(d) { return d.id || (d.id = ++i); });
-
-        // Enter any new nodes at the parent's previous position.
-        var nodeEnter = node.enter().append("g")
-            .attr("class", "node")
-            .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
-            .on("click", click);
-
-        nodeEnter.append("circle")
-            .attr("r", 10)
-            .style("fill", function(d) { return d._children ? "red" : "green"; });
-
-        nodeEnter.append("text")
-            .attr("y", function(d) {
-                return d.children || d._children ? -35 : 35; })
-            .attr("dy", ".35em")
-            .attr("text-anchor", "middle")
-            .text(function(d) { return d.node_data; })
-            .style("fill-opacity", 1);
-
-        // Transition nodes to their new position.
-        var nodeUpdate = node.transition()
-            .duration(duration)
-            .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-        nodeUpdate.select("circle")
-            .attr("r", 25)
-            .style("fill", function(d) { return d._children ? "red" : "green"; });
-
-        nodeUpdate.select("text")
-            .style("fill-opacity", 1);
-
-        // Transition exiting nodes to the parent's new position.
-        var nodeExit = node.exit().transition()
-            .duration(duration)
-            .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-            .remove();
-
-        nodeExit.select("circle")
-            .attr("r", 1e-6);
-
-        nodeExit.select("text")
-            .style("fill-opacity", 1e-6);
-
-        // Update the links…
-        var link = svg.selectAll("path.link")
-            .data(links, function(d) { return d.target.id; });
-
-        // Enter any new links at the parent's previous position.
-        link.enter().insert("path", "g")
-            .attr("class", "link")
-            .attr("d", function(d) {
-                var o = {x: source.x0, y: source.y0};
-                return diagonal({source: o, target: o});
-            });
-
-        // Transition links to their new position.
-        link.transition()
-            .duration(duration)
-            .attr("d", diagonal);
-
-        // Transition exiting nodes to the parent's new position.
-        link.exit().transition()
-            .duration(duration)
-            .attr("d", function(d) {
-                var o = {x: source.x, y: source.y};
-                return diagonal({source: o, target: o});
-            })
-            .remove();
-
-        // Stash the old positions for transition.
-        nodes.forEach(function(d) {
-            d.x0 = d.x;
-            d.y0 = d.y;
-        });
-    }
-
-    // Toggle children on click.
-    function click(d) {
-        if (d.children) {
-            d._children = d.children;
-            d.children = null;
-        } else {
-            d.children = d._children;
-            d._children = null;
-        }
-        update(d);
-    }
-
-</script>
+</body>
+</html>
