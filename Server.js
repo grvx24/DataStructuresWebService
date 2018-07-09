@@ -1,52 +1,46 @@
 var http = require('http'); // Import Node.js core module
 var fs = require('fs');
 
-
 var server = http.createServer(function (req, res) {
 
     var filename;
     switch (req.url) {
         case '/':
-
             filename = "index.html";
             break;
         case '/index.css':
-
             filename = "index.css";
             break;
-
         case '/linkedlist':
-
             filename = "LinkedList.html";
             break;
-
         case '/LinkedList.css':
             filename = "LinkedList.css";
             break;
-
         case '/graph':
             filename = "Graph.html";
             break;
-
         case '/Graph.css':
             filename = "Graph.css";
             break;
-
         case '/stack':
             filename = "Stack_animation.html";
             break;
-
         case '/Stack_animation.css':
             filename = "Stack_animation.css";
             break;
-
         case '/tree':
             filename = "Tree.html";
             break;
         case '/canvas.png':
             filename = "canvas.png";
             break;
-
+        case '/LinkedList.js':
+            filename = "LinkedList.js";
+            break;
+        case '/SaveToFile.js':
+            filename = "SaveToFile.js";
+            break;
         default:
             res.end('404 Invalid Request!');
             break;
@@ -56,11 +50,14 @@ var server = http.createServer(function (req, res) {
     if (filename) {
        var isHtml =  filename.search("html");
        var isPng =  filename.search("png");
+       var isJS =  filename.search("js");
 
        if(isHtml>0){
            res.writeHead(200, {"Content-Type": "text/html"});
        }else if(isPng>0){
            res.writeHead(200, {"Content-Type": "image/png"});
+       }else if(isJS>0){
+           res.writeHead(200, {"Content-Type": "application/javascript"});
        }
        else{
            res.writeHead(200, {"Content-Type": "text/css"});

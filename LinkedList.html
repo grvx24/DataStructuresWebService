@@ -6,34 +6,91 @@
 
     <link rel="stylesheet" type="text/css" href="LinkedList.css">
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/rgbcolor.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/StackBlur.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script>
+
 
 </head>
-<body>
+<body onload="Init()">
 <div class="row">
     <div class="column">
-        <textarea class="JsonInput" rows="25" cols="50">
-        {
-        "type":"linked_list",
-        "subtype":"single",
-        "data":[
-            {"value":33},
-            {"value":234},
-        ]};
-
-        </textarea>
-        <input class="VisualizeButton" align="center" type="button" value="Visualize"/>
+        <textarea id="JsonInput" rows="25" cols="50" wrap="physical"></textarea>
+        <input class="VisualizeButton" align="center" type="button" value="Run example" onclick="RunExample()"/>
+        <input class="VisualizeButton" align="center" type="button" value="Visualize" onclick="Visualize()"/>
+        <input  class="VisualizeButton" align="center" type="button" value="IMG" onclick="DownloadPNG()"/>
     </div>
     <div class="column">
-        <div id = "svgContainer"></div>
+        <div id = "svgDiv">
+            <svg id="SvgContainer" xmlns="http://www.w3.org/2000/svg" >
+                <style type="text/css">
+                    .DataRect
+                    {
+                        fill:yellow;
+                        stroke-width: 3px;
+                        stroke:black;
+                    }
+                    .PointerRect
+                    {
+                        fill:orange;
+                        stroke-width: 3px;
+                        stroke:black;
+                    }
+
+                    .SvgContainer
+                    {
+                        background-color: aliceblue;
+                    }
+
+                    .HeadRect
+                    {
+                        fill:limegreen;
+                        stroke-width: 3px;
+                        stroke:black;
+                    }
+
+                    .NullRect
+                    {
+                        fill:red;
+                        stroke-width: 3px;
+                        stroke:black;
+                    }
+
+                    .StructureText
+                    {
+                        text-anchor: middle;
+                        font-weight: bold;
+                    }
+                    .PointerText
+                    {
+                        text-anchor: middle;
+                        font-weight: bold;
+                    }
+
+                    .SvgText
+                    {
+                        text-anchor: middle;
+                    }
+
+                </style>
+            </svg>
+        </div>
     </div>
 </div>
 
+<canvas id="canvasId"></canvas>
+
+<script src="LinkedList.js"></script>
+<script src="SaveToFile.js"></script>
 
 
-
+</body>
 
 <script>
-    
+
     var jsonData = {
         "type":"linked_list",
         "subtype":"single",
@@ -64,141 +121,11 @@
     var offset = (dataRectHeight + pointerRectHeight+50);
     var lineOffset = dataRectHeight + pointerRectHeight;
 
-    var svgContainer=d3.select("#svgContainer")
-        .append("svg")
-        .attr("class","SvgContainer")
-        .attr("width",width)
-        .attr("height",height)
-        .attr("transform",
-            "translate(100, 0)");
-
-
-    var HeadGroup = d3.selectAll(".SvgContainer")
-        .append("g")
-        .attr("id","HeadGroup")
-        .attr("transform", "translate(50 , 50)");
-
-    var HeadX = 100
-
-
-    HeadGroup
-        .append("rect")
-        .attr("class","HeadRect")
-        .attr("y",0)
-        .attr("x",HeadX)
-        .attr("width",dataRectWidth)
-        .attr("height",dataRectHeight)
-        .attr("fill","green");
-
-    HeadGroup
-        .append("text")
-        .text("Head")
-        .style("font-size", "30px")
-        .style('fill', 'black')
-        .style("font-weight","bold")
-        .attr("x",(HeadX*2)-50)
-        .attr("y",50);
-
-    HeadGroup
-        .append("line")
-        .attr("x1",HeadX*2-50)
-        .attr("y1",100)
-        .attr("x2",HeadX*2-50)
-        .attr("y2",150)
-        .attr("stroke-width", 5)
-        .attr("stroke", "black");
-
-    var lastItemIndex = data.length;
-
 
     var NullGroup = d3.selectAll(".SvgContainer")
         .append("g")
         .attr("id","TailGroup")
         .attr("transform", "translate(50,"+(lastItemIndex*200+200)+")");
 
-    NullGroup
-        .append("rect")
-        .attr("class","NullRect")
-        .attr("y",0)
-        .attr("x",HeadX)
-        .attr("width",dataRectWidth)
-        .attr("height",dataRectHeight)
-        .attr("fill","green");
 
-    NullGroup
-        .append("text")
-        .text("NULL")
-        .style("font-size", "30px")
-        .style('fill', 'black')
-        .style("font-weight","bold")
-        .attr("x",(HeadX*2)-50)
-        .attr("y",50);
-
-
-    var dataRectangles = svgContainer.selectAll(".SvgContainer")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("class","DataGroup")
-        .attr("transform", "translate(100, 200)")
-        .append("rect")
-        .attr("class","DataRect")
-        .attr("y",function (d,i) {
-            return i *offset;
-        })
-        .attr("x",50)
-        .attr("width",dataRectWidth)
-        .attr("height",dataRectHeight);
-
-
-    var pointerRectangles = svgContainer.selectAll(".DataGroup")
-        .append("rect")
-        .attr("class","PointerRect")
-        .attr("y",function (d,i) {
-            return i *offset+dataRectHeight;
-        })
-        .attr("x",50)
-        .attr("width",pointerRectWidth)
-        .attr("height",pointerRectHeight);
-
-
-    var dataText = svgContainer.selectAll(".DataGroup")
-        .append("text")
-        .attr("class","StructureText")
-        .text(function (d,i) {
-            return "Data: "+d.value;
-        })
-        .attr("y",function (d,i) {
-            return i *offset + dataRectHeight/2;
-        })
-        .attr("x",offset/2);
-
-    var indexText = svgContainer.selectAll(".DataGroup")
-        .append("text")
-        .attr("class","StructureText")
-        .text("Next")
-        .attr("y",function (d,i) {
-            return i *offset + dataRectHeight/2+pointerRectHeight*1.5;
-        })
-        .attr("x",offset/2);
-
-    var lines = svgContainer.selectAll(".DataGroup")
-        .append("line")
-        .attr("x1",100)
-        .attr("y1",function (d,i) {
-            return i*200 + lineOffset;
-        })
-        .attr("x2",100)
-        .attr("y2",function (d,i) {
-            return i*200+lineOffset+50;
-        })
-        .attr("stroke-width", 5)
-        .attr("stroke", "black");
-
-
-
-</script>
-
-
-</body>
 </html>

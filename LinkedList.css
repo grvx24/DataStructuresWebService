@@ -50,6 +50,8 @@ text
 .column {
     float: left;
     width: 300px;
+    min-width: 300px;
+    min-height: 600px;
 }
 
 /* Clear floats after the columns */
@@ -61,6 +63,8 @@ text
 
 .VisualizeButton
 {
+    margin-left: 10px;
+    min-width: 350px;
     background-color: darkgreen; /* Green */
     border: none;
     color: white;
@@ -69,6 +73,7 @@ text
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    margin-bottom: 5px;
 }
 
 .VisualizeButton:hover
