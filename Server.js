@@ -38,8 +38,15 @@ var server = http.createServer(function (req, res) {
         case '/LinkedList.js':
             filename = "LinkedList.js";
             break;
+        case '/graphAnimation':
+            filename = "Graph_Animation.html";
+            break;
+            Graph_Animation.html
         case '/SaveToFile.js':
             filename = "SaveToFile.js";
+            break;
+        case '/miserables.json':
+            filename = "miserables.json";
             break;
         default:
             res.end('404 Invalid Request!');
@@ -51,15 +58,21 @@ var server = http.createServer(function (req, res) {
        var isHtml =  filename.search("html");
        var isPng =  filename.search("png");
        var isJS =  filename.search("js");
+       var isJSON =  filename.search("json");
 
        if(isHtml>0){
            res.writeHead(200, {"Content-Type": "text/html"});
+
        }else if(isPng>0){
            res.writeHead(200, {"Content-Type": "image/png"});
+
+       }else if(isJSON>0){
+           res.writeHead(200, {"Content-Type": "application/json"});
+
        }else if(isJS>0){
            res.writeHead(200, {"Content-Type": "application/javascript"});
-       }
-       else{
+
+       }else{
            res.writeHead(200, {"Content-Type": "text/css"});
        }
 
