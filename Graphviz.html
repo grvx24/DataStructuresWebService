@@ -3,6 +3,9 @@
 <head>
     <link rel="stylesheet" type="text/css" href="Buttons.css">
     <link rel="stylesheet" type="text/css" href="Graphviz.css">
+    <script type="text/javascript" src="http://canvg.github.io/canvg/rgbcolor.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/StackBlur.js"></script>
+    <script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script>
 
 </head>
 
@@ -13,9 +16,10 @@
     <div class="column">
         <button class="VisualizeButton" onclick=" window.open('https://www.graphviz.org/gallery/')"> Graphviz gallery</button>
         <button class="VisualizeButton" onclick=" window.open('https://graphs.grevian.org/example')"> Dot language examples</button>
-        <textarea id="Input" rows="25" cols="50" wrap="physical"></textarea>
-        <button class="VisualizeButton" onclick="RunExample()" > Run example</button>
+        <textarea id="Input" rows="25" cols="75" wrap="physical"></textarea>
+        <button class="VisualizeButton" onclick="LinkedListExample()" > Run example</button>
         <button class="VisualizeButton" onclick="StartVisualization()"> Visualize</button>
+        <button class="VisualizeButton" onclick="DownloadPNG()" > Save to png</button>
     </div>
     <div class="column">
         <div id="graph" style="text-align: center;"></div>
@@ -27,5 +31,39 @@
 <script src="https://unpkg.com/viz.js@1.8.0/viz.js" type="javascript/worker"></script>
 <script src="https://unpkg.com/d3-graphviz@1.4.0/build/d3-graphviz.min.js"></script>
 <script src="Graphviz.js"></script>
+
+<canvas id="canvasId"></canvas>
+<a id="DownloadLink"></a>
+
+<script>
+
+    var filename = 'GraphvizImage';
+    var canvas = document.getElementById("canvasId");
+
+    function DrawCanvas() {
+        var divSVG = document.getElementById("graph").firstChild;
+        var svgHtml = divSVG.innerHTML.trim();
+
+        canvas.width= divSVG.getBBox().width;
+        canvas.height= divSVG.getBBox().height;
+
+        canvg(canvas,svgHtml);
+        canvas.style.display="none";
+    }
+
+    function DownloadPNG() {
+
+        DrawCanvas();
+
+        var url = canvas.toDataURL('image/png');
+        var link = document.getElementById('DownloadLink');
+
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+    }
+
+</script>
 
 </body>

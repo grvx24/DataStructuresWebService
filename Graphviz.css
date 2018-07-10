@@ -6,7 +6,7 @@ html, body {
 
 .column {
     float: left;
-    width: 500px;
+    width: 600px;
 }
 
 /* Clear floats after the columns */
