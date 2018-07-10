@@ -1,0 +1,27 @@
+html, body {
+    height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url("canvas.png");
+}
+
+.column {
+    float: left;
+    width: 500px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+@media screen and (max-width: 600px) {
+    .column {
+        width: 100%;
+    }
+}
+
+label
+{
+    horiz-align: center;
+}
