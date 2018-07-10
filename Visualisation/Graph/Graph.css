@@ -1,9 +1,19 @@
 html, body {
-    height: 100%;
     font-family: Arial, Helvetica, sans-serif;
-    background-image: url("canvas.png");
 }
 
+.GraphCircle
+{
+    fill:yellow;
+    stroke-width: 3px;
+    stroke:black;
+
+}
+
+.SvgContainer
+{
+    background-color: aliceblue;
+}
 .column {
     float: left;
     width: 500px;
@@ -21,7 +31,3 @@ html, body {
     }
 }
 
-label
-{
-    horiz-align: center;
-}
