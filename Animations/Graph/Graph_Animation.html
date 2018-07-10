@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tree Traversals</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+    <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Lato|Quicksand'>
+    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+    <style>
+        html, body {
+            height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            background-image: url("../../Images/canvas.png");
+            font-size: 16px;
+        }
+
+        #tree-container{
+
+            height: 800px;
+            display: inline-block;
+            position: relative;
+            width: 100%;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+            box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.3);
+
+        }
+
+        .VisualizeButton
+        {
+            max-width: 300px;
+            background-color: darkgreen;
+            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+            color: white;
+            padding: 15px 32px;
+            font-size: 20px;
+        }
+
+        select {
+            padding: 15px 32px;
+            width: 300px;
+            font-size: 20px;
+            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .node {
+            color:white;
+            fill: green;
+            stroke-width: 2px;
+            stroke:black;
+        }
+
+        .link {
+            stroke: black;
+            stroke-opacity: 0.6;
+        }
+
+    </style>
+
+    <div class="col-lg-12" style=" padding-left: 35px; top: 35px; padding-bottom: 20px; text-align: left;">
+        <div class="input-group">
+            <select >
+                <option selected="selected" value="searching">Searching</option>
+            </select>
+            <select id="algorithmCombo">
+                <option selected="selected" value="breadth-first">Breadth-first</option>
+                <option selected="selected" value="depth-first">Depth-first</option>
+            </select>
+            <input class="VisualizeButton" align="center" onclick="startAnimation()" type="button" value="Start Animation"/>
+            <input class="VisualizeButton" align="center" onclick="resetTraversal()" type="button" value="Reset"/>
+        </div>
+    </div>
+    <div class="col-lg-12" style=" padding-top: 35px; text-align: center;">
+        <div id="tree-container"></div>
+    </div>
+</body>
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+
+        var x = document.getElementById('tree-container');
+
+        var width = x.offsetWidth;
+
+
+        var treeData = [{children:[{children:[{},{},{}]},{children:[{children:[{}]}]},{},{children:[{},{children:[{},{}]}]}]}];
+
+        var margin = {top: 50, right: 0, bottom: 20, left: 20},
+            width = document.getElementById("tree-container").offsetWidth - margin.right - margin.left,
+            height = document.getElementById("tree-container").offsetHeight - margin.top - margin.bottom;
+
+        var i=0, animDuration=500,root;
+
+        var tree = d3.layout.tree()
+            .size([height, width]);
+
+
+        d3.selection.prototype.moveToFront = function() {
+            return this.each(function(){
+                this.parentNode.appendChild(this);
+            });
+        };
+
+        var svg = d3.select("#tree-container").append("svg")
+            .attr("width", width + margin.right + margin.left)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        root= treeData[0];
+        update(treeData[0]);
+
+        function resetTraversal(root){
+            d3.selectAll(".node")
+                .transition().duration(animDuration)
+                .style("fill","green");
+
+            d3.selectAll(".text").transition().duration(animDuration)
+                .text("");
+        }
+
+        function update(root) {
+
+            resetTraversal(root);
+
+            var nodes = tree.nodes(root).reverse(),
+                links = tree.links(nodes);
+
+            nodes.forEach(function(d) { d.y = d.depth *100; });
+
+
+             svg.append("g")
+                .attr("class","nodes");
+
+            var node = svg.selectAll("nodes")
+                .data(nodes, function(d) {return d.id || (d.id = ++i); })
+                .enter().append("g")
+                .attr("class", "node");
+
+            node.append("circle")
+                .attr("class", "node")
+                .attr("id",function(d){return "node-"+d.id})
+                .attr("cx",function(d){return d.x;})
+                .attr("cy",function(d){return d.y;})
+                .attr("r", 25);
+
+            node.append("text")
+                .attr("class", "text")
+                .attr("id",function(d){return "text-"+d.id})
+                .attr("text-anchor", "middle")
+                .style("font-size", "20px")
+                .style('fill', 'white')
+                .style("text-shadow", "2px 2px 4px #000000")
+                .attr("dy", ".35em")
+                .attr("x",function(d){return d.x;})
+                .attr("y",function(d){return d.y;});
+
+            var linkWrapper = svg.append("g").attr("id","links").selectAll("path.link")
+                .data(links, function(d) { return d.target.id; })
+                .enter()
+                .append("line", "g")
+                .attr("class", "link")
+                .attr("id",function(d){
+                    return d.source.id +"->"+ d.target.id;
+                })
+                .attr('x1', function(d){return d.source.x;})
+                .attr('x2',function(d){return d.target.x;})
+                .attr('y1',function(d){return d.source.y;})
+                .attr('y2',function(d){return d.target.y;});
+
+
+            d3.selectAll(".node").moveToFront();
+            d3.selectAll(".text").moveToFront();
+
+        }
+        var licznik = 1;
+        function visitElement(element,animX){
+            if(element.id ==14){
+                licznik = 1;
+            }
+            d3.select("#node-"+element.id)
+                .transition().duration(animDuration).delay(animDuration*animX)
+                .style("fill","red");
+
+            d3.select("#text-"+element.id).transition().duration(animDuration).delay(animDuration*animX)
+                .style("stroke","none")
+                .style("font-size","30px")
+                .text(licznik);
+
+            licznik+=1;
+        }
+
+        function startAnimation(){
+            var e = document.getElementById('algorithmCombo');
+            var algorithm = e.options[e.selectedIndex].value;
+            resetTraversal();
+            switch(algorithm){
+                case "breadth-first":
+                    bft();
+                    break;
+                case "depth-first":
+                    dft();
+                    break;
+            }
+        }
+
+        function dft(){
+            var stack=[];
+            var animX=0;
+            stack.push(root);
+            while(stack.length!==0){
+                var element = stack.pop();
+                visitElement(element,animX);
+                animX=animX+1;
+                if(element.children!==undefined){
+                    for(var i=0; i<element.children.length; i++){
+                        stack.push(element.children[element.children.length-i-1]);
+                    }
+                }
+            }
+        }
+
+        function bft(){
+            var queue=[];
+            var animX=0;
+            queue.push(root);
+            while(queue.length!==0){
+                var element = queue.shift();
+                visitElement(element,animX);
+                animX= animX+1;
+                if(element.children!==undefined){
+                    for(var i=0; i<element.children.length; i++){
+                        queue.push(element.children[i]);
+                    }
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
