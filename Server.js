@@ -41,7 +41,6 @@ var server = http.createServer(function (req, res) {
         case '/graphAnimation':
             filename = "Graph_Animation.html";
             break;
-            Graph_Animation.html
         case '/SaveToFile.js':
             filename = "SaveToFile.js";
             break;

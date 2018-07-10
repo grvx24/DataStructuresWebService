@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <!-- Latest compiled and minified CSS -->
+    <meta charset="utf-8">
+    <title>Tree Traversals</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+    <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Lato|Quicksand'>
+    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
@@ -21,166 +19,227 @@
             height: 100%;
             font-family: Arial, Helvetica, sans-serif;
             background-image: url("canvas.png");
+            font-size: 16px;
         }
 
-        .links line {
-            stroke: black;
-            stroke-opacity: 0.6;
+        #tree-container{
 
-        }
-
-        .node circle  {
-            color:white;
-            fill: green;
-            stroke-width: 1.5px;
-            stroke:black;
-        }
-
-        .svgContainer{
+            height: 800px;
+            display: inline-block;
+            position: relative;
+            width: 100%;
             border-radius: 10px;
             background-color: rgba(0, 0, 0, 0.2);
             box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.3);
+
         }
 
         .VisualizeButton
         {
-            min-width: 300px;
+            max-width: 300px;
             background-color: darkgreen;
+            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
             color: white;
             padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin-bottom: 5px;
-            box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.3);
+            font-size: 20px;
+        }
+
+        select {
+            padding: 15px 32px;
+            width: 300px;
+            font-size: 20px;
+            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .node {
+            color:white;
+            fill: green;
+            stroke-width: 2px;
+            stroke:black;
+        }
+
+        .link {
+            stroke: black;
+            stroke-opacity: 0.6;
         }
 
     </style>
 
-    <div class="col-lg-3" style=" padding-left: 35px; top: 35px; padding-bottom: 20px; text-align: center;">
-        <input class="VisualizeButton" align="center" type="button" value="Add element"/>
-        <input class="VisualizeButton" align="center" type="button" value="Delete element" />
-        <input class="VisualizeButton" align="center" type="button" value="Add Connection" />
+    <div class="col-lg-12" style=" padding-left: 35px; top: 35px; padding-bottom: 20px; text-align: left;">
+        <div class="input-group">
+            <select >
+                <option selected="selected" value="searching">Searching</option>
+            </select>
+            <select id="algorithmCombo">
+                <option selected="selected" value="breadth-first">Breadth-first</option>
+                <option selected="selected" value="depth-first">Depth-first</option>
+            </select>
+            <input class="VisualizeButton" align="center" onclick="startAnimation()" type="button" value="Start Animation"/>
+            <input class="VisualizeButton" align="center" onclick="resetTraversal()" type="button" value="Reset"/>
+        </div>
     </div>
-    <div class="col-lg-9" style=" padding-top: 35px; text-align: center;">
-        <svg width="960" height="600" class="svgContainer" ></svg>
+    <div class="col-lg-12" style=" padding-top: 35px; text-align: center;">
+        <div id="tree-container"></div>
     </div>
+</body>
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script>
 
-        var svg = d3.select("svg"),
-            width = +svg.attr("width"),
-            height = +svg.attr("height");
+        var x = document.getElementById('tree-container');
 
-        var color = d3.scaleOrdinal(d3.schemeCategory20);
+        var width = x.offsetWidth;
 
-        var simulation = d3.forceSimulation()
-            .force("link", d3.forceLink().id(function(d) { return d.id; })
-                .distance(function (d) {
-                    return 50*d.value;
-                }))
-            .force("charge", d3.forceManyBody())
-            .force("center", d3.forceCenter(width / 2, height / 2));
 
-        d3.json("/miserables.json", function(error, graph) {
-            if (error) throw error;
+        var treeData = [{children:[{children:[{},{},{}]},{children:[{children:[{}]}]},{},{children:[{},{children:[{},{}]}]}]}];
 
-            var link = svg.append("g")
-                .attr("class", "links")
-                .selectAll("line")
-                .data(graph.links)
-                .enter().append("line")
-                .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+        var margin = {top: 50, right: 0, bottom: 20, left: 20},
+            width = document.getElementById("tree-container").offsetWidth - margin.right - margin.left,
+            height = document.getElementById("tree-container").offsetHeight - margin.top - margin.bottom;
 
-            svg.append("h")
-                .attr("class", "nodes");
+        var i=0, animDuration=500,root;
+
+        var tree = d3.layout.tree()
+            .size([height, width]);
+
+
+        d3.selection.prototype.moveToFront = function() {
+            return this.each(function(){
+                this.parentNode.appendChild(this);
+            });
+        };
+
+        var svg = d3.select("#tree-container").append("svg")
+            .attr("width", width + margin.right + margin.left)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        root= treeData[0];
+        update(treeData[0]);
+
+        function resetTraversal(root){
+            d3.selectAll(".node")
+                .transition().duration(animDuration)
+                .style("fill","green");
+
+            d3.selectAll(".text").transition().duration(animDuration)
+                .text("");
+        }
+
+        function update(root) {
+
+            resetTraversal(root);
+
+            var nodes = tree.nodes(root).reverse(),
+                links = tree.links(nodes);
+
+            nodes.forEach(function(d) { d.y = d.depth *100; });
+
+
+             svg.append("g")
+                .attr("class","nodes");
 
             var node = svg.selectAll("nodes")
-                .data(graph.nodes)
+                .data(nodes, function(d) {return d.id || (d.id = ++i); })
                 .enter().append("g")
-                .attr("class", "node")
-                .call(d3.drag()
-                    .on("start", dragstarted)
-                    .on("drag", dragged)
-                    .on("end", dragended));
+                .attr("class", "node");
 
             node.append("circle")
-                .attr("r", 25)
-                .attr("fill", function(d) { return color(d.group); });
+                .attr("class", "node")
+                .attr("id",function(d){return "node-"+d.id})
+                .attr("cx",function(d){return d.x;})
+                .attr("cy",function(d){return d.y;})
+                .attr("r", 25);
 
             node.append("text")
-                .attr("class", "textValue")
+                .attr("class", "text")
+                .attr("id",function(d){return "text-"+d.id})
                 .attr("text-anchor", "middle")
                 .style("font-size", "20px")
                 .style('fill', 'white')
                 .style("text-shadow", "2px 2px 4px #000000")
                 .attr("dy", ".35em")
-                .text(function(d) { return d.value; })
+                .attr("x",function(d){return d.x;})
+                .attr("y",function(d){return d.y+40;});
 
-            var textsIN = svg.selectAll("text.textValue");
-
-            node.append("text")
-                .attr("class", "textId")
-                .attr("text-anchor", "middle")
-                .style("font-size", "20px")
-                .style('fill', 'white')
-                .style("text-shadow", "2px 2px 4px #000000")
-                .attr("dy", ".35em")
-                .text(function(d) { return d.id; })
-
-            var texts = svg.selectAll("text.textId");
-
-
-
-            var circles = svg.selectAll("circle");
+            var linkWrapper = svg.append("g").attr("id","links").selectAll("path.link")
+                .data(links, function(d) { return d.target.id; })
+                .enter()
+                .append("line", "g")
+                .attr("class", "link")
+                .attr("id",function(d){
+                    return d.source.id +"->"+ d.target.id;
+                })
+                .attr('x1', function(d){return d.source.x;})
+                .attr('x2',function(d){return d.target.x;})
+                .attr('y1',function(d){return d.source.y;})
+                .attr('y2',function(d){return d.target.y;});
 
 
+            var xel =
+            d3.select("#nodes").moveToFront();
 
-            simulation
-                .nodes(graph.nodes)
-                .on("tick", ticked);
-
-            simulation.force("link")
-                .links(graph.links);
-
-            function ticked() {
-                link
-                    .attr("x1", function(d) { return d.source.x; })
-                    .attr("y1", function(d) { return d.source.y; })
-                    .attr("x2", function(d) { return d.target.x; })
-                    .attr("y2", function(d) { return d.target.y; });
-
-                circles
-                    .attr("cx", function(d) { return d.x; })
-                    .attr("cy", function(d) { return d.y; });
-
-                textsIN
-                    .attr("x", function(d) { return d.x; })
-                    .attr("y", function(d) { return d.y; });
-
-                texts
-                    .attr("x", function(d) { return d.x; })
-                    .attr("y", function(d) { return d.y+40; });
+        }
+        var licznik = 1;
+        function visitElement(element,animX){
+            if(element.id ==14){
+                licznik = 1;
             }
-        });
+            d3.select("#node-"+element.id)
+                .transition().duration(animDuration).delay(animDuration*animX)
+                .style("fill","red");
 
-        function dragstarted(d) {
-            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-            d.fx = d.x;
-            d.fy = d.y;
+            d3.select("#text-"+element.id).transition().duration(animDuration).delay(animDuration*animX)
+                .text(licznik);
+
+            licznik+=1;
         }
 
-        function dragged(d) {
-            d.fx = d3.event.x;
-            d.fy = d3.event.y;
+        function startAnimation(){
+            var e = document.getElementById('algorithmCombo');
+            var algorithm = e.options[e.selectedIndex].value;
+            resetTraversal();
+            switch(algorithm){
+                case "breadth-first":
+                    bft();
+                    break;
+                case "depth-first":
+                    dft();
+                    break;
+            }
         }
 
-        function dragended(d) {
-            if (!d3.exent.active) simulation.alphaTarget(0);
-            d.fx = null;
-            d.fy = null;
+        function dft(){
+            var stack=[];
+            var animX=0;
+            stack.push(root);
+            while(stack.length!==0){
+                var element = stack.pop();
+                visitElement(element,animX);
+                animX=animX+1;
+                if(element.children!==undefined){
+                    for(var i=0; i<element.children.length; i++){
+                        stack.push(element.children[element.children.length-i-1]);
+                    }
+                }
+            }
+        }
+
+        function bft(){
+            var queue=[];
+            var animX=0;
+            queue.push(root);
+            while(queue.length!==0){
+                var element = queue.shift();
+                visitElement(element,animX);
+                animX= animX+1;
+                if(element.children!==undefined){
+                    for(var i=0; i<element.children.length; i++){
+                        queue.push(element.children[i]);
+                    }
+                }
+            }
         }
 
     </script>
