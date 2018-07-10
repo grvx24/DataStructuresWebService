@@ -161,7 +161,7 @@
                 .style("text-shadow", "2px 2px 4px #000000")
                 .attr("dy", ".35em")
                 .attr("x",function(d){return d.x;})
-                .attr("y",function(d){return d.y+40;});
+                .attr("y",function(d){return d.y;});
 
             var linkWrapper = svg.append("g").attr("id","links").selectAll("path.link")
                 .data(links, function(d) { return d.target.id; })
@@ -177,8 +177,8 @@
                 .attr('y2',function(d){return d.target.y;});
 
 
-            var xel =
-            d3.select("#nodes").moveToFront();
+            d3.selectAll(".node").moveToFront();
+            d3.selectAll(".text").moveToFront();
 
         }
         var licznik = 1;
@@ -191,6 +191,8 @@
                 .style("fill","red");
 
             d3.select("#text-"+element.id).transition().duration(animDuration).delay(animDuration*animX)
+                .style("stroke","none")
+                .style("font-size","30px")
                 .text(licznik);
 
             licznik+=1;
