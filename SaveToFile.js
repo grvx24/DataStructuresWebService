@@ -4,6 +4,7 @@ var canvas = document.getElementById("canvasId");
 function DrawCanvas() {
     var svgHtml = document.getElementById("svgDiv").innerHTML.trim();
 
+
     console.log(svgHtml);
 
     canvg(canvas,svgHtml);

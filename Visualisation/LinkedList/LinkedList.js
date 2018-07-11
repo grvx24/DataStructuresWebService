@@ -27,7 +27,7 @@ function Init() {
             .attr("width",width)
             .attr("height",height)
             .attr("transform",
-                "translate(100, 0)");
+                "translate(0, 0)");
 
     var HeadGroup = svgContainer
         .append("g")

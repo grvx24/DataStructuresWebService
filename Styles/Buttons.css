@@ -17,3 +17,14 @@
 {
     background-color: greenyellow; /* Green */
 }
+
+.ExampleSelect {
+    font-size: 20px;
+    overflow:hidden;
+    width:150px;
+    -moz-border-radius: 9px 9px 9px 9px;
+    -webkit-border-radius: 9px 9px 9px 9px;
+    border-radius: 9px 9px 9px 9px;
+    box-shadow: 1px 1px 11px #330033;
+    background: greenyellow url("http://i62.tinypic.com/15xvbd5.png") no-repeat scroll 319px center;
+}

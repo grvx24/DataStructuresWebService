@@ -17,7 +17,12 @@
         <button class="VisualizeButton" onclick=" window.open('https://www.graphviz.org/gallery/')"> Graphviz gallery</button>
         <button class="VisualizeButton" onclick=" window.open('https://graphs.grevian.org/example')"> Dot language examples</button>
         <textarea id="Input" rows="25" cols="75" wrap="physical"></textarea>
-        <button class="VisualizeButton" onclick="LinkedListExample()" > Run example</button>
+        <button class="VisualizeButton" onclick="RunExample()" > Run example</button>
+        <select id="examples" class = "ExampleSelect">
+            <option value="LinkedList">Linked list</option>
+            <option value="Graph">Graph</option>
+            <option value="HashTable">Hash table</option>
+        </select>
         <button class="VisualizeButton" onclick="StartVisualization()"> Visualize</button>
         <button class="VisualizeButton" onclick="DownloadPNG()" > Save to png</button>
     </div>

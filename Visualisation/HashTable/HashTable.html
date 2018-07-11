@@ -2,10 +2,138 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../Styles/MainStyles.css">
-    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../Styles/MainStyles.css">
+    <link rel="stylesheet" type="text/css" href="../../Styles/Buttons.css">
+    <link rel="stylesheet" type="text/css" href="HashTable.css">
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src=HashTable.js></script>
+
+    <title>Hash table</title>
 </head>
 <body>
+
+
+<div class="row">
+    <div class="column">
+        <label>JSON input</label>
+        <textarea id="JsonInput" rows="25" cols="50"></textarea>
+        <input class="VisualizeButton" align="center" type="button" value="Run example" onclick="RunExample()"/>
+        <input class="VisualizeButton" align="center" type="button" value="Visualize" onclick="StartVisualization()"/>
+        <input class="VisualizeButton" align="center" type="button" value="Save to png" onclick="DownloadPNG()"/>
+    </div>
+    <div class="column">
+        <div id = "svgDiv">
+            <svg id="SvgContainer" xmlns="http://www.w3.org/2000/svg" >
+                <style>
+                    .DataRect
+                    {
+                        fill:yellow;
+                        stroke-width: 3px;
+                        stroke:black;
+                    }
+                    .SvgContainer
+                    {
+                        background-color: aliceblue;
+                    }
+                    .StructureText
+                    {
+                        text-anchor: middle;
+                        font-weight: bold;
+                    }
+                    .SvgText
+                    {
+                        text-anchor: middle;
+                    }
+                </style>
+            </svg>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+    var width = 1000;
+    var height = 1000;
+    var offset = 100;
+    var dataRectWidth=125;
+    var dataRectHeight=100;
+    var pointerRectWidth = 50;
+    var pointerRectHeight = 100;
+
+    var jsonText = '{\n' +
+        '    "type":"hash_table",\n' +
+        '        "subtype":"many_values",\n' +
+        '        "data":[\n' +
+        '            {"key":"key_example0", "value" : ["val1","val2",3,5]},\n' +
+        '            {"key":"key_example1", "value" : []},\n' +
+        '            {"key":"key_example2", "value" : ["val14",33,"val0",5]},\n' +
+        '            {"key":"key_example3", "value" : ["val5",3]},\n' +
+        '            {"key":"key_example4", "value" : [12,54]},\n' +
+        '            {"key":"key_example5", "value" : []}\n' +
+        '        ]\n' +
+        '  \n' +
+        '}\n' +
+        '\n';
+
+    var jsonData = JSON.parse(jsonText);
+    console.log(jsonData.data);
+
+    var svgContainer=d3.select("svg")
+        .attr("width",width)
+        .attr("height",height)
+        .attr("transform",
+            "translate(0, 0)");
+
+
+    var keyRectangles=svgContainer.selectAll("#SvgContainer")
+        .data(jsonData.data)
+        .enter()
+        .append("g")
+        .attr("class","DataGroup")
+        .attr("transform", "translate(50, 50)")
+        .append("rect")
+        .attr("class","DataRect")
+        .attr("x",100)
+        .attr("y",function (d,i) {
+            return i *offset;
+        })
+        .attr("width",dataRectWidth)
+        .attr("height",dataRectHeight);
+
+
+    var keyText =svgContainer.selectAll(".DataGroup")
+        .append("text")
+        .attr("class","StructureText")
+        .text(function (d,i) {
+            return d.key;
+        })
+        .attr("x",(offset+60))
+        .attr("y",function (d,i) {
+            return i *offset+50;
+        });
+
+    var pointers =svgContainer.selectAll(".DataGroup")
+        .append("rect")
+        .attr("class","PointerRect")
+        .attr("y",function (d,i) {
+            return i *offset;
+        })
+        .attr("x",(offset+125))
+        .attr("width",pointerRectWidth)
+        .attr("height",pointerRectHeight);
+
+
+
+
+
+</script>
+
+
+
+
 
 </body>
 </html>
