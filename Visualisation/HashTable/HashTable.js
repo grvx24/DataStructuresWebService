@@ -7,29 +7,57 @@ function RemoveSvg() {
             node.removeChild(node.firstChild);
         }
 
+        node.innerHTML='               <style>\n' +
+            '                    .SvgText\n' +
+            '                    {\n' +
+            '                        text-anchor: middle;\n' +
+            '                    }\n' +
+            '\n' +
+            '\n' +
+            '                    .DataRect\n' +
+            '                    {\n' +
+            '                        fill:yellow;\n' +
+            '                        stroke-width: 3px;\n' +
+            '                        stroke:black;\n' +
+            '                    }\n' +
+            '                    .PointerRect\n' +
+            '                    {\n' +
+            '                        fill:orange;\n' +
+            '                        stroke-width: 3px;\n' +
+            '                        stroke:black;\n' +
+            '                    }\n' +
+            '\n' +
+            '                    .SvgContainer\n' +
+            '                    {\n' +
+            '                        /* background-color: aliceblue;*/\n' +
+            '                    }\n' +
+            '\n' +
+            '                    .ValueRect\n' +
+            '                    {\n' +
+            '                        fill:lightgreen;\n' +
+            '                        stroke-width: 3px;\n' +
+            '                        stroke:black;\n' +
+            '                    }\n' +
+            '                    .ValueRect2\n' +
+            '                    {\n' +
+            '                        fill:lightskyblue;\n' +
+            '                        stroke-width: 3px;\n' +
+            '                        stroke:black;\n' +
+            '                    }\n' +
+            '                    .StructureText\n' +
+            '                    {\n' +
+            '                        text-anchor: middle;\n' +
+            '                        font-weight: bold;\n' +
+            '                    }\n' +
+            '                </style>';
+
+
     }
 
 }
 
 
 function RunHashTableExample() {
-    RemoveSvg();
-
-
-    var width = 1500;
-    var height = 1000;
-    var offset = 100;
-    var dataRectWidth=125;
-    var dataRectHeight=100;
-
-    var valueRectWidth=100;
-    var valueRectHeight=70;
-
-    var indexRectWidth = 100;
-    var indexRectHeight = 30;
-
-    var pointerRectWidth = 50;
-    var pointerRectHeight = 100;
 
     var jsonText = '{\n' +
         '    "type":"hash_table",\n' +
@@ -46,7 +74,46 @@ function RunHashTableExample() {
         '}\n' +
         '\n';
 
-    var jsonData = JSON.parse(jsonText);
+    Visualize(JSON.parse(jsonText));
+
+}
+
+function StartVisualization() {
+
+    var jsonText = document.getElementById("JsonInput").value;
+    try
+    {
+        var jsonData = JSON.parse(jsonText);
+        Visualize(jsonData);
+    }
+    catch (e) {
+        alert(e.message);
+    }
+
+
+}
+
+
+function Visualize(jsonData) {
+
+    RemoveSvg();
+
+    var width = 1500;
+    var height = 1000;
+    var offset = 100;
+    var dataRectWidth=125;
+    var dataRectHeight=100;
+
+    var valueRectWidth=100;
+    var valueRectHeight=70;
+
+    var indexRectWidth = 100;
+    var indexRectHeight = 30;
+
+    var pointerRectWidth = 50;
+    var pointerRectHeight = 100;
+
+
     document.getElementById("JsonInput").value =JSON.stringify(jsonData);
 
 
@@ -194,15 +261,4 @@ function RunHashTableExample() {
                 return offset*index+90;
             });
     });
-    
-
-}
-
-function StartVisualization() {
-    
-}
-
-
-function Visualize() {
-    
 }
