@@ -1,3 +1,9 @@
+.SvgText
+{
+    text-anchor: middle;
+}
+
+
 .DataRect
 {
     fill:yellow;
@@ -16,26 +22,25 @@
     /* background-color: aliceblue;*/
 }
 
-.HeadRect
+.ValueRect
 {
-    fill:limegreen;
+    fill:lightgreen;
     stroke-width: 3px;
     stroke:black;
 }
-
-.NullRect
+.ValueRect2
 {
-    fill:red;
+    fill:lightskyblue;
     stroke-width: 3px;
     stroke:black;
 }
-
 .StructureText
 {
     text-anchor: middle;
     font-weight: bold;
-    color: white;
 }
+
+
 
 text
 {
