@@ -110,6 +110,26 @@ var server = http.createServer(function (req, res) {
                 break;
 
 
+            case '/queueAnimation':
+                filename = "Animations/Queue/Queue.html";
+                break;
+            case '/Queue.css':
+                filename = "Animations/Queue/Queue.css";
+                break;
+
+            case '/queueWorkerAnimation':
+                filename = "Animations/QueueWorker/QueueWorker.html";
+                break;
+
+            case '/stackAnimation':
+                filename = "Animations/Stack/Stack_animation.html";
+                break;
+            case '/Stack_animation.css':
+                filename = "Animations/Stack/Stack_animation.css";
+                break;
+
+
+
             case '/SaveToFile.js':
                 filename = "SaveToFile.js";
                 break;
