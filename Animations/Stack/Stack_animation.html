@@ -79,16 +79,47 @@
 
     }
 
-    function Remove() {
-        var rects =svgContainer.select("g").selectAll("rect")
-            .data(data);
-        rects.exit().remove();
+    var removeTime = 500;
+    var xOffset=1500;
 
-        var texts = svgContainer.select("g").selectAll("text");
-        texts
-            .data(data)
-            .exit()
-            .remove();
+    function Remove() {
+        svgContainer.select("g").selectAll("rect")
+            .filter(function (d,i) {
+                console.log(i);
+                return i===(data.length);
+            })
+            .transition()
+                .duration(removeTime)
+                .attr("x",xOffset)
+                .attr("y",0);
+
+        svgContainer.select("g").selectAll("text")
+            .filter(function (d,i) {
+                console.log(i);
+                return i===(data.length);
+            })
+            .transition()
+            .duration(removeTime)
+            .attr("x",xOffset+25)
+            .attr("y",50);
+
+
+        setTimeout(function(){
+            var rects =svgContainer.select("g").selectAll("rect")
+                .data(data);
+            rects.exit().remove();
+
+            var texts = svgContainer.select("g").selectAll("text");
+            texts
+                .data(data)
+                .exit()
+                .remove();
+        }, removeTime);
+
+
+
+
+
 
 
     }
@@ -99,18 +130,19 @@
         var rectangles = rectanglesGroup.selectAll("rect")
             .data(data)
             .enter()
-            .append("rect");
+            .append("rect")
+            .attr("class","dataRect");
 
         var rectanglesAttributes = rectangles.
         transition()
             .duration(500)
             .attr("x", function (d,i) {
                 return i*rect_width; })
-            .attr("y",50)
+            .attr("y",0)
             .attr("width", function () { return rect_width - padding; })
             .attr("height",function (){return rect_height - padding})
             .attr("id",function (d,i) {
-                console.log("rect"+i)
+                console.log("rect"+i);
                 return "rect"+i;
             })
             .style("fill",function(d){return color(d);});
@@ -128,7 +160,7 @@
             })
             .attr("x",function (d,i) {
                 return i*rect_width+10; })
-            .attr("y",100)
+            .attr("y",50)
             .attr("fill","Black")
             .attr("font-size","30px");
 

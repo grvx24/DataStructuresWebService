@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <title>Queue animation</title>
+</head>
+<body>
+
+<div id ="svgDiv">
+    <svg width="1000" height="1000">
+
+        <style>
+            .dataRect
+            {
+                fill:red;
+                stroke-width: 3px;
+                stroke:black;
+            }
+        </style>
+
+
+    </svg>
+</div>
+
+
+<script>
+
+    var data=[4,2,5,7,8,4,1,2,7,8,9];
+
+    var width = 100;
+    var height = 100;
+
+
+    var svg = d3.select("svg");
+
+    function update(data) {
+
+        var group = svg.selectAll("g")
+            .data(data);
+
+        group.attr("class","dataRect");
+
+
+        group.enter().append("g")
+            .attr("class","dataGroup")
+            .attr("transform",function(d,i){
+              return "translate("+i*width+",0)";
+            })
+            .merge(group)
+            .append("rect")
+            .attr("class","dataRect")
+            .attr("width",width)
+            .attr("height",height);
+
+        group.append("text")
+
+
+        group.exit().remove();
+
+    }
+
+update(data);
+
+
+</script>
+
+
+
+</body>
+
+</html>

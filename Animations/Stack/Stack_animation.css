@@ -34,3 +34,8 @@ html, body {
     color: red;
     margin-left: 50px;
 }
+.dataRect
+{
+    stroke-width: 3px;
+    stroke:black;
+}
